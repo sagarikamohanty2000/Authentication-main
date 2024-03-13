@@ -17,38 +17,39 @@ const AuthForm = () => {
     setSignUp((prevState) => !prevState);
     const email = emailEntered.current.value;
     const password = passwordEntered.current.value;
-  
-    if(isLogin)
-    {}
-    else{
-    try{
-    const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCRV_pMlgg9YkB23h8BAghdxFtTTaHpd1M',{
-      method:'POST',
-      body:JSON.stringify({
-        email:email,
-        password:password,
-        returnSecureToken:true
-      })
-  })
-  setSignUp((prevState) => !prevState);
-  if(!response.ok){
-    const data = await response.json();
-    let errorMsg = 'Authentication Failed';
-   if(data && data.error && data.error.message)
-   {
-     errorMsg = data.error.message;
-   }
-
-     alert(errorMsg);
-
-     throw new Error(errorMsg);
-  }
-}
-catch(error){
-  console.log(error);
-}
+    let url = "";
+    if (isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCRV_pMlgg9YkB23h8BAghdxFtTTaHpd1M";
+    } else {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCRV_pMlgg9YkB23h8BAghdxFtTTaHpd1M";
     }
-    
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          returnSecureToken: true,
+        }),
+      });
+      setSignUp((prevState) => !prevState);
+      const data = await response.json();
+      if (!response.ok) {
+        let errorMsg = "Authentication Failed";
+        if (data && data.error && data.error.message) {
+          errorMsg = data.error.message;
+        }
+        alert(errorMsg);
+        throw new Error(errorMsg);
+      } else {
+        console.log(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <section className={classes.auth}>
@@ -60,7 +61,7 @@ catch(error){
         </div>
         <div className={classes.control}>
           <label htmlFor="password">Your Password</label>
-          <input type="password" id="password" required ref={passwordEntered}/>
+          <input type="password" id="password" required ref={passwordEntered} />
         </div>
         <div className={classes.actions}>
           {!isSignup ? (
