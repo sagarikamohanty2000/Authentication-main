@@ -14,11 +14,16 @@ export const AuthProvider = (props) => {
     const prevToken = localStorage.getItem('token');
     const [token, setToken] = useState(prevToken);
 
+    
  const isloggedin = !!token;
  
  const loginHandler = (token) => {
     setToken(token);
     localStorage.setItem('token',token);
+    setTimeout(() => {
+    localStorage.removeItem('token');
+    setToken('')
+    }, 50000)
  }
 
  const logoutHandler = () => {
