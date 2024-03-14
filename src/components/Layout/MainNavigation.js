@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AuthContext from "../Store/AuthContext";
 import classes from "./MainNavigation.module.css";
 import { useContext } from "react";
 
 const MainNavigation = () => {
 
+  const history = useHistory();
   const logoutHandler = () => {
     authContext.logout('');
+    history.replace('/auth');
   }
 const authContext = useContext(AuthContext);
   return (
